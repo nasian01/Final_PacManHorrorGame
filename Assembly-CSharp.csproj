@@ -41,11 +41,10 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets/Scripts/GameController.cs" />
+     <Compile Include="Assets/Scripts/Enemy.cs" />
      <Compile Include="Assets/Scripts/ReverseTile.cs" />
      <Compile Include="Assets/Scripts/UIController.cs" />
      <Compile Include="Assets/Scripts/StateController.cs" />
-     <Compile Include="Assets/Scripts/Collectable.cs" />
-     <Compile Include="Assets/Scripts/Timer.cs" />
      <Compile Include="Assets/Scripts/PlayerController.cs" />
     <Reference Include="UnityEngine">
         <HintPath>/Applications/Unity/Hub/Editor/2022.3.8f1/Unity.app/Contents/Managed/UnityEngine/UnityEngine.dll</HintPath>

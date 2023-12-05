@@ -6,7 +6,25 @@ public class StateController : MonoBehaviour
 {
 
     #region Variables
+
+    //singleton pattern
+    public static StateController Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = FindObjectOfType<StateController>();
+                if (_instance == null)
+                {
+                    Debug.LogError("StateController instance not found");
+                }
+            }
+            return _instance;
+        }
+    }
     
+    //state pattern
     public enum GameState
     {
         Menu,
@@ -17,6 +35,9 @@ public class StateController : MonoBehaviour
     }
 
     private GameState _gameState;
+    private static StateController _instance;
+
+    private List<Enemy> _observers = new List<Enemy>();
 
     #endregion
 
@@ -56,11 +77,16 @@ public class StateController : MonoBehaviour
     private void OnPlayingState()
     {
         _gameState = GameState.Playing;
+        NotifyEnemies(GameState.Playing);
     }
 
     private void OnReverseState()
     {
         _gameState = GameState.Reverse;
+        foreach (Enemy enemy in _observers)
+        {
+            // enter reversed state
+        }
     }
 
     private void OnPausedState()
@@ -75,9 +101,43 @@ public class StateController : MonoBehaviour
 
     #endregion
 
+    #region Observer Pattern
+    public void AddObserver(Enemy observer)
+    {
+        _observers.Add(observer);
+    }
+
+    public void RemoveObserver(Enemy observer)
+    {
+        _observers.Remove(observer);
+    }
+
+    private void NotifyEnemies(GameState state)
+    {
+        switch(state)
+        {
+            case GameState.Menu:
+                break;
+            case GameState.Playing:
+                foreach (Enemy enemy in _observers)
+                {
+                    //enemy.UpdateState();
+                }
+                break;
+            case GameState.Reverse:
+                break;
+            case GameState.Paused:
+                break;
+            case GameState.GameOver:
+                break;
+        }
+    }
+
+    #endregion
+
     #region Getters and Setters
 
-    public GameState GetGameState()
+    public GameState GetCurrentGameState()
     {
         return _gameState;
     }
