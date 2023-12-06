@@ -14,7 +14,10 @@ public class MenuNavigator : MonoBehaviour
     {
         // set the current button index to 0
         currentButtonIndex = 0;
-        // set the color of the first button to red
-        buttonCommands[currentButtonIndex].GetComponent<Renderer>().material.color = Color.red;
+
+        public void Update() {
+            // if the index is equal to the button, show that button's cursor object
+        }
+        
     }
 }
