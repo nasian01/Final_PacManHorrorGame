@@ -1,23 +1,70 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.SceneManagement;
 public class MenuNavigator : MonoBehaviour
 {
-    // create an array of ButtonCommands
     public ButtonCommand[] buttonCommands;
-    // fill with button commands in the inspector
-    // create a variable to hold the current button index
     private int currentButtonIndex = 0;
-    // Start is called before the first frame update
+    private int previousButtonIndex = 0;
     void Start()
     {
-        // set the current button index to 0
+        SceneManager.LoadScene("MenuScreen");
         currentButtonIndex = 0;
-
-        public void Update() {
-            // if the index is equal to the button, show that button's cursor object
+        previousButtonIndex = 0;
+        for (int i = 0; i < buttonCommands.Length; i++)
+        {
+            buttonCommands[i].cursor.SetActive(false);
         }
-        
+        buttonCommands[currentButtonIndex].cursor.SetActive(true);
+    }
+    
+    public void Update() {
+        if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W))
+        {
+            OnClickUp();
+            buttonCommands[currentButtonIndex].cursor.SetActive(true);
+            buttonCommands[previousButtonIndex].cursor.SetActive(false);
+            previousButtonIndex = currentButtonIndex;
+        } else if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.S))
+        {
+            OnClickDown();
+            buttonCommands[currentButtonIndex].cursor.SetActive(true);
+            buttonCommands[previousButtonIndex].cursor.SetActive(false);
+            previousButtonIndex = currentButtonIndex;
+        } else if (Input.GetKeyDown(KeyCode.Space))
+        {
+            OnClickSpace();
+        }
+    }
+
+    public void OnClickUp()
+    {
+        if (currentButtonIndex == 2)
+        {
+            currentButtonIndex = 0;
+        }
+        else
+        {
+            currentButtonIndex++;
+        }
+    }
+
+    public void OnClickDown()
+    {
+        if (currentButtonIndex == 0)
+        {
+            currentButtonIndex = 2;
+        }
+        else
+        {
+            currentButtonIndex--;
+        }
+    }
+
+    public void OnClickSpace()
+    {
+        buttonCommands[currentButtonIndex].OnSpacePressed();
     }
 }

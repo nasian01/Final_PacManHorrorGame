@@ -7,10 +7,7 @@ public class BackButton : ButtonCommand
 {
     public override void OnSpacePressed()
     {
-        Debug.Log("Back button clicked!");
-        // switch scene to playScene
+        Debug.Log("Back button pressed!");
         SceneManager.LoadScene("MenuScreen");
-        
     }
 }
-

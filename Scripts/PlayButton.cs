@@ -7,8 +7,7 @@ public class PlayButton : ButtonCommand
 {
     public override void OnSpacePressed()
     {
-        Debug.Log("Play button clicked!");
-        // switch scene to playScene
+        Debug.Log("Play button pressed!");
         SceneManager.LoadScene("PlayScreen");
     }
 }
