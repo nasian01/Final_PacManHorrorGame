@@ -2321,8 +2321,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scoreText: {fileID: 1245178483}
-  gameOverText: {fileID: 0}
   livesText: {fileID: 1159310588}
+  gameResult: {fileID: 1904498556}
+  gameResultCanvasGroup: {fileID: 1127326003}
 --- !u!114 &364927756
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11459,13 +11460,14 @@ GameObject:
   - component: {fileID: 1127326000}
   - component: {fileID: 1127326002}
   - component: {fileID: 1127326001}
+  - component: {fileID: 1127326003}
   m_Layer: 5
-  m_Name: GameOverPanel
+  m_Name: GameResultPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1127326000
 RectTransform:
   m_ObjectHideFlags: 0
@@ -11525,6 +11527,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1127325999}
   m_CullTransparentMesh: 1
+--- !u!225 &1127326003
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1127325999}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
 --- !u!1 &1133542972
 GameObject:
   m_ObjectHideFlags: 0
@@ -14603,7 +14617,7 @@ GameObject:
   - component: {fileID: 1904498557}
   - component: {fileID: 1904498556}
   m_Layer: 5
-  m_Name: GameOverText
+  m_Name: GameResultText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -15470,6 +15484,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateController: {fileID: 2028840956}
+  playerController: {fileID: 1205572609}
+  uiController: {fileID: 364927755}
+  enemiesParent: {fileID: 2004591241}
 --- !u!1 &2038922440
 GameObject:
   m_ObjectHideFlags: 0

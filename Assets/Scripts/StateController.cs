@@ -31,7 +31,8 @@ public class StateController : MonoBehaviour
         Playing,
         Reverse,
         Paused,
-        GameOver
+        GameOver,
+        GameWin
     }
 
     public UIController uiController;
@@ -63,6 +64,9 @@ public class StateController : MonoBehaviour
                 break;
             case GameState.GameOver:
                 OnGameOverState();
+                break;
+            case GameState.GameWin:
+                OnGameWinState();
                 break;
         }
     }
@@ -98,6 +102,11 @@ public class StateController : MonoBehaviour
     private void OnGameOverState()
     {
         _gameState = GameState.GameOver;
+    }
+
+    private void OnGameWinState()
+    {
+        _gameState = GameState.GameWin;
     }
 
     #endregion
@@ -152,7 +161,7 @@ public class StateController : MonoBehaviour
     public GameState GetReverseState(){return GameState.Reverse;}
     public GameState GetPausedState(){return GameState.Paused;}
     public GameState GetGameOverState(){return GameState.GameOver;}
-
+    public GameState GetGameWinState(){return GameState.GameWin;}
 
     #endregion
 

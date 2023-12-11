@@ -10,11 +10,14 @@ public class Enemy : MonoBehaviour
     private bool _isMoving = false;
     private Rigidbody2D _rigidbody2D;
     private bool _isReverse = false;
+    private Vector3 _originalPosition;
+    private bool _isFrozen = false;
 
 
     void Awake()
     {
         _rigidbody2D = GetComponent<Rigidbody2D>();
+        _originalPosition = transform.position;
     }
 
     void Update()
@@ -40,18 +43,43 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    public void ResetPosition()
+    {
+        transform.position = _originalPosition;
+    }
+
+    public void FreezeEnemy()
+    {
+        _isFrozen = true;
+    }
+
+    public void UnFreezeEnemy()
+    {
+        _isFrozen = false;
+    }
+
     private void MoveTowardsPlayer()
     {
+        if(!_isFrozen)
+        {
         _isMoving = true;
         Vector2 directionToPlayer = (_playerController.transform.position - transform.position).normalized;
         _rigidbody2D.velocity = directionToPlayer * moveSpeed;
+        }else{
+            _rigidbody2D.velocity = Vector2.zero;
+        }
     }
 
     private void RunFromPlayer()
     {
+        if(!_isFrozen)
+        {
         _isMoving = true;
         Vector2 directionAwayFromPlayer = (transform.position - _playerController.transform.position).normalized;
         _rigidbody2D.velocity = directionAwayFromPlayer * moveSpeed;
+        }else{
+            _rigidbody2D.velocity = Vector2.zero;
+        }
     }
 
     void OnCollisionEnter2D(Collision2D collision)
@@ -62,7 +90,7 @@ public class Enemy : MonoBehaviour
         }
         else
         {
-            _isMoving = false; // Allow changing direction on collision
+            _isMoving = false;
         }
     }
 
