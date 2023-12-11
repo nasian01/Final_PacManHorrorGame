@@ -34,6 +34,8 @@ public class StateController : MonoBehaviour
         GameOver
     }
 
+    public UIController uiController;
+
     private GameState _gameState;
     private static StateController _instance;
 
@@ -74,19 +76,18 @@ public class StateController : MonoBehaviour
         _gameState = GameState.Menu;
     }
 
-    private void OnPlayingState()
+    public void OnPlayingState()
     {
+        print("Playing State");
         _gameState = GameState.Playing;
         NotifyEnemies(GameState.Playing);
     }
 
     private void OnReverseState()
     {
+        print("Reverse State");
         _gameState = GameState.Reverse;
-        foreach (Enemy enemy in _observers)
-        {
-            // enter reversed state
-        }
+        NotifyEnemies(GameState.Reverse);
     }
 
     private void OnPausedState()
@@ -121,10 +122,14 @@ public class StateController : MonoBehaviour
             case GameState.Playing:
                 foreach (Enemy enemy in _observers)
                 {
-                    //enemy.UpdateState();
+                    enemy.SetReverse(false);
                 }
                 break;
             case GameState.Reverse:
+                foreach (Enemy enemy in _observers)
+                {
+                    enemy.SetReverse(true);
+                }
                 break;
             case GameState.Paused:
                 break;

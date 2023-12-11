@@ -6,6 +6,8 @@ using UnityEngine.UI;
 public class UIController : MonoBehaviour
 {
     public Text scoreText;
+    public Text gameOverText;
+    public Text livesText;
 
     void Start()
     {
@@ -21,6 +23,11 @@ public class UIController : MonoBehaviour
     public void UpdateScore(int score) {
         scoreText.text = "Score: " + score;
     }
+
+    public void UpdateLives(int lives) {
+        livesText.text = "Lives: " + lives;
+    }
+
 
     
 }

@@ -1,57 +1,81 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Tilemaps;
-
+using UnityEngine.UI;
 
 public class Enemy : MonoBehaviour
 {
-    private Grid _grid;
-    private PlayerController _playerController;
-    private StateController _stateController;
-    void Start()
-    {
-        _stateController = StateController.Instance;
-        _stateController.AddObserver(this);
-        _grid = GameObject.Find("Grid").GetComponent<Grid>();
-        _playerController = GameObject.Find("Player").GetComponent<PlayerController>();
-    }
+    public Sprite ghostSprite;
+    public Sprite reverseGhostSprite;
+    public PlayerController _playerController;
+    public float moveSpeed = 10f;
+    private bool _isMoving = false;
+    private Rigidbody2D _rigidbody2D;
+    private bool _isReverse = false;
 
+
+    void Awake()
+    {
+        _rigidbody2D = GetComponent<Rigidbody2D>();
+    }
 
     void Update()
     {
-        
+        if (_isMoving)
+        {
+            if (Vector2.Distance(transform.position, _playerController.transform.position) < 0.1f)
+            {
+                _isMoving = false;
+                return;
+            }
+        }
+        else
+        {
+            if (_isReverse)
+            {
+                RunFromPlayer();
+            }
+            else
+            {
+                MoveTowardsPlayer();
+            }
+        }
     }
 
-    // public void UpdateState()
-    // {
-    //     if (_stateController.GetCurrentGameState() == _stateController.GameState.Playing)
-    //     {
-    //         Vector3Int playerPos = _grid.WorldToCell(_playerController.transform.position);
-    //         Vector3Int enemyPos = _grid.WorldToCell(transform.position);
-    //         Vector3Int nextPos = Vector3Int.zero;
-    //         if (playerPos.x > enemyPos.x)
-    //         {
-    //             nextPos = enemyPos + Vector3Int.right;
-    //         }
-    //         else if (playerPos.x < enemyPos.x)
-    //         {
-    //             nextPos = enemyPos + Vector3Int.left;
-    //         }
-    //         else if (playerPos.y > enemyPos.y)
-    //         {
-    //             nextPos = enemyPos + Vector3Int.up;
-    //         }
-    //         else if (playerPos.y < enemyPos.y)
-    //         {
-    //             nextPos = enemyPos + Vector3Int.down;
-    //         }
-    //         if (_grid.GetTile(nextPos) != null)
-    //         {
-    //             transform.position = _grid.GetCellCenterWorld(nextPos);
-    //         }
-    //     }
-    // }
+    private void MoveTowardsPlayer()
+    {
+        _isMoving = true;
+        Vector2 directionToPlayer = (_playerController.transform.position - transform.position).normalized;
+        _rigidbody2D.velocity = directionToPlayer * moveSpeed;
+    }
 
+    private void RunFromPlayer()
+    {
+        _isMoving = true;
+        Vector2 directionAwayFromPlayer = (transform.position - _playerController.transform.position).normalized;
+        _rigidbody2D.velocity = directionAwayFromPlayer * moveSpeed;
+    }
 
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            _playerController.DecreasePlayerLives(1);
+        }
+        else
+        {
+            _isMoving = false; // Allow changing direction on collision
+        }
+    }
+
+    public void SetReverse(bool isReverse)
+    {
+        if(isReverse)
+        {
+            GetComponent<SpriteRenderer>().sprite = reverseGhostSprite;
+        }
+        else
+        {
+            GetComponent<SpriteRenderer>().sprite = ghostSprite;
+        }
+        _isReverse = isReverse;
+    }
 }

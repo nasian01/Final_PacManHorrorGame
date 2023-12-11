@@ -5,6 +5,7 @@ public class PlayerController : MonoBehaviour
     [Header("Player Attributes")]
     [SerializeField] private float _speed = 5.0f;
     [SerializeField] private float _score = 0f;
+    [SerializeField] private int _lives = 3;
 
     [Header("References")]
     public Rigidbody2D rb;
@@ -98,6 +99,16 @@ public class PlayerController : MonoBehaviour
     {
         _score += amount;
         uiController.UpdateScore((int)_score);
+    }
+
+    public void DecreasePlayerLives(int amount)
+    {
+        _lives -= amount;
+        uiController.UpdateLives(_lives);
+        if (_lives <= 0)
+        {
+            gameController.GameOver();
+        }
     }
 
     #endregion
