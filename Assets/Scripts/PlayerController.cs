@@ -71,12 +71,12 @@ public class PlayerController : MonoBehaviour
     {
         if (_movementDirection.x > 0)
         {
-            GetComponent<SpriteRenderer>().flipX = true;
+            GetComponent<SpriteRenderer>().flipX = false;
             GetComponent<SpriteRenderer>().flipY = false;
         }
         else if (_movementDirection.x < 0)
         {
-            GetComponent<SpriteRenderer>().flipX = false;
+            GetComponent<SpriteRenderer>().flipX = true;
             GetComponent<SpriteRenderer>().flipY = false;
         }
     }
@@ -109,6 +109,11 @@ public class PlayerController : MonoBehaviour
     {
         _score += amount;
         uiController.UpdateScore((int)_score);
+    }
+
+    public void ConsumeEnemy()
+    {
+        IncreasePlayerScore(1);
     }
 
     public void DecreasePlayerLives(int amount)

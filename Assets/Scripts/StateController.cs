@@ -40,7 +40,7 @@ public class StateController : MonoBehaviour
     private GameState _gameState;
     private static StateController _instance;
 
-    private List<Enemy> _observers = new List<Enemy>();
+    [SerializeField] private List<Enemy> _observers = new List<Enemy>();
 
     #endregion
 
@@ -139,12 +139,22 @@ public class StateController : MonoBehaviour
                 {
                     enemy.SetReverse(true);
                 }
+                StartCoroutine(EnemyTimer());
                 break;
             case GameState.Paused:
                 break;
             case GameState.GameOver:
                 break;
         }
+    }
+
+    IEnumerator EnemyTimer() {
+        yield return new WaitForSeconds(6f);
+        foreach (Enemy enemy in _observers)
+        {
+            enemy.SetReverse(false);
+        }
+        ChangeGameState(GameState.Playing);
     }
 
     #endregion

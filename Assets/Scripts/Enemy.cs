@@ -18,6 +18,7 @@ public class Enemy : MonoBehaviour
     {
         _rigidbody2D = GetComponent<Rigidbody2D>();
         _originalPosition = transform.position;
+        StateController.Instance.AddObserver(this);
     }
 
     void Update()
@@ -86,7 +87,15 @@ public class Enemy : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            _playerController.DecreasePlayerLives(1);
+            if(!_isReverse)
+            {
+                _playerController.DecreasePlayerLives(1);
+            }
+            else
+            {
+                _playerController.ConsumeEnemy();
+                ResetPosition();
+            }
         }
         else
         {

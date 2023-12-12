@@ -1,4 +1,5 @@
-# Final_PacManHorrorGame
-Pacu Pacu Horror Scary game. 
+# Jaden Johnson Branch
 
-o _o
+## Working on UI scripts
+
+Majority of uploads are in 'Scripts' folder
