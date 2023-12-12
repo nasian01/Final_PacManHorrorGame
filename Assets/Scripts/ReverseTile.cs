@@ -9,6 +9,7 @@ public class ReverseTile : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other) {
         if (other.gameObject.CompareTag("Player")) {
             stateController.ChangeGameState(stateController.GetReverseState());
+            Destroy(gameObject);
         }
     }
 }

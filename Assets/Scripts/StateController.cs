@@ -6,17 +6,41 @@ public class StateController : MonoBehaviour
 {
 
     #region Variables
+
+    //singleton pattern
+    public static StateController Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = FindObjectOfType<StateController>();
+                if (_instance == null)
+                {
+                    Debug.LogError("StateController instance not found");
+                }
+            }
+            return _instance;
+        }
+    }
     
+    //state pattern
     public enum GameState
     {
         Menu,
         Playing,
         Reverse,
         Paused,
-        GameOver
+        GameOver,
+        GameWin
     }
 
+    public UIController uiController;
+
     private GameState _gameState;
+    private static StateController _instance;
+
+    [SerializeField] private List<Enemy> _observers = new List<Enemy>();
 
     #endregion
 
@@ -41,6 +65,9 @@ public class StateController : MonoBehaviour
             case GameState.GameOver:
                 OnGameOverState();
                 break;
+            case GameState.GameWin:
+                OnGameWinState();
+                break;
         }
     }
 
@@ -53,14 +80,18 @@ public class StateController : MonoBehaviour
         _gameState = GameState.Menu;
     }
 
-    private void OnPlayingState()
+    public void OnPlayingState()
     {
+        print("Playing State");
         _gameState = GameState.Playing;
+        NotifyEnemies(GameState.Playing);
     }
 
     private void OnReverseState()
     {
+        print("Reverse State");
         _gameState = GameState.Reverse;
+        NotifyEnemies(GameState.Reverse);
     }
 
     private void OnPausedState()
@@ -73,11 +104,64 @@ public class StateController : MonoBehaviour
         _gameState = GameState.GameOver;
     }
 
+    private void OnGameWinState()
+    {
+        _gameState = GameState.GameWin;
+    }
+
+    #endregion
+
+    #region Observer Pattern
+    public void AddObserver(Enemy observer)
+    {
+        _observers.Add(observer);
+    }
+
+    public void RemoveObserver(Enemy observer)
+    {
+        _observers.Remove(observer);
+    }
+
+    private void NotifyEnemies(GameState state)
+    {
+        switch(state)
+        {
+            case GameState.Menu:
+                break;
+            case GameState.Playing:
+                foreach (Enemy enemy in _observers)
+                {
+                    enemy.SetReverse(false);
+                }
+                break;
+            case GameState.Reverse:
+                foreach (Enemy enemy in _observers)
+                {
+                    enemy.SetReverse(true);
+                }
+                StartCoroutine(EnemyTimer());
+                break;
+            case GameState.Paused:
+                break;
+            case GameState.GameOver:
+                break;
+        }
+    }
+
+    IEnumerator EnemyTimer() {
+        yield return new WaitForSeconds(6f);
+        foreach (Enemy enemy in _observers)
+        {
+            enemy.SetReverse(false);
+        }
+        ChangeGameState(GameState.Playing);
+    }
+
     #endregion
 
     #region Getters and Setters
 
-    public GameState GetGameState()
+    public GameState GetCurrentGameState()
     {
         return _gameState;
     }
@@ -87,7 +171,7 @@ public class StateController : MonoBehaviour
     public GameState GetReverseState(){return GameState.Reverse;}
     public GameState GetPausedState(){return GameState.Paused;}
     public GameState GetGameOverState(){return GameState.GameOver;}
-
+    public GameState GetGameWinState(){return GameState.GameWin;}
 
     #endregion
 

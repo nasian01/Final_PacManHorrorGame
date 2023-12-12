@@ -5,16 +5,20 @@ public class PlayerController : MonoBehaviour
     [Header("Player Attributes")]
     [SerializeField] private float _speed = 5.0f;
     [SerializeField] private float _score = 0f;
+    [SerializeField] private int _lives = 3;
+    [SerializeField] private bool _isFrozen = false;
 
     [Header("References")]
     public Rigidbody2D rb;
     public GameController gameController;
     public UIController uiController;
+    private Vector3 _originalPosition;
 
     private Vector2 _movementDirection;
 
     void Start()
     {
+        _originalPosition = transform.position;
         _movementDirection = Vector2.right;
     }
 
@@ -25,9 +29,23 @@ public class PlayerController : MonoBehaviour
         FlipSprite();
     }
 
+    public void ResetPosition() {
+        transform.position = _originalPosition;
+    }
+
+    public void FreezePlayer() {
+        _isFrozen = true;
+    }
+
+    public void UnFreezePlayer() {
+        _isFrozen = false;
+    }
+
     #region Player Movement
     private void ReadInput()
     {
+        if (!_isFrozen)
+        {
         float horizontalInput = Input.GetAxisRaw("Horizontal");
         float verticalInput = Input.GetAxisRaw("Vertical");
 
@@ -38,6 +56,9 @@ public class PlayerController : MonoBehaviour
         else if (verticalInput != 0)
         {
             _movementDirection = new Vector2(0, verticalInput).normalized;
+        }
+        }else{
+            _movementDirection = Vector2.zero;
         }
     }
 
@@ -56,16 +77,6 @@ public class PlayerController : MonoBehaviour
         else if (_movementDirection.x < 0)
         {
             GetComponent<SpriteRenderer>().flipX = true;
-            GetComponent<SpriteRenderer>().flipY = false;
-        }
-        else if (_movementDirection.y > 0)
-        {
-            GetComponent<SpriteRenderer>().flipX = false;
-            GetComponent<SpriteRenderer>().flipY = true;
-        }
-        else if (_movementDirection.y < 0)
-        {
-            GetComponent<SpriteRenderer>().flipX = false;
             GetComponent<SpriteRenderer>().flipY = false;
         }
     }
@@ -98,6 +109,23 @@ public class PlayerController : MonoBehaviour
     {
         _score += amount;
         uiController.UpdateScore((int)_score);
+    }
+
+    public void ConsumeEnemy()
+    {
+        IncreasePlayerScore(1);
+    }
+
+    public void DecreasePlayerLives(int amount)
+    {
+        _lives -= amount;
+        uiController.UpdateLives(_lives);
+        if (_lives <= 0)
+        {
+            gameController.GameOver();
+        }else{
+            gameController.ResetAllPositions();
+            }
     }
 
     #endregion
